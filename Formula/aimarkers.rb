@@ -1,12 +1,12 @@
 class Aimarkers < Formula
   include Language::Python::Shebang
 
-  desc "Detecta marcadores de IA en código, documentación, webs y repositorios Git"
+  desc "Detect AI markers in code, docs, websites, images and Git repositories"
   homepage "https://github.com/z115666/aimarkers"
-  # Fijado a un commit concreto: inmutable, a diferencia de una etiqueta
-  url "https://github.com/z115666/aimarkers/archive/3775e699337af2166a1b90afcea3be533e018c06.tar.gz"
-  version "1.0.0"
-  sha256 "1298bd1b69d2794ad7514276176ce981374724448abcb848f3c03c0c3f93c0c6"
+  # Pinned to a specific commit: immutable, unlike a tag
+  url "https://github.com/z115666/aimarkers/archive/db20db2ce92dbb31e457f5a407de6d1988f318ea.tar.gz"
+  version "1.1.0"
+  sha256 "a3158f8dd8111d2e4c11792794a91ebaf3c36c925430b44c3f745dbf839e8412"
   license "MIT"
   head "https://github.com/z115666/aimarkers.git", branch: "main"
 
@@ -16,16 +16,25 @@ class Aimarkers < Formula
     libexec.install "aimarkers.py"
     rewrite_shebang detected_python_shebang, libexec/"aimarkers.py"
     bin.install_symlink libexec/"aimarkers.py" => "aimarkers"
-    doc.install "README.md", "SECURITY.md", "CHANGELOG.md"
+    doc.install Dir["README*.md", "SECURITY*.md", "CHANGELOG*.md"]
+  end
+
+  def caveats
+    <<~EOS
+      To verify C2PA (Content Credentials) signatures in images, also install:
+        brew install c2patool
+      Para verificar las firmas C2PA de las imágenes, instala también c2patool.
+    EOS
   end
 
   test do
     assert_match version.to_s, shell_output("#{bin}/aimarkers --version")
 
-    (testpath/"humano.md").write "Notas de la reunión de ayer: revisar el proxy y cerrar el ticket."
-    assert_match "Sin indicios relevantes", shell_output("#{bin}/aimarkers #{testpath}/humano.md --sin-color")
+    (testpath/"human.md").write "Notes from yesterday's meeting: check the proxy and close the ticket."
+    assert_match "No relevant signs", shell_output("#{bin}/aimarkers #{testpath}/human.md --no-color --lang en")
+    assert_match "Sin indicios relevantes", shell_output("#{bin}/aimarkers #{testpath}/human.md --no-color --lang es")
 
-    (testpath/"ia.md").write "Más información en https://example.com/?utm_source=chatgpt.com"
-    assert_match "ATRIBUCIÓN EXPLÍCITA", shell_output("#{bin}/aimarkers #{testpath}/ia.md --sin-color")
+    (testpath/"ai.md").write "More information at https://example.com/?utm_source=chatgpt.com"
+    assert_match "EXPLICIT ATTRIBUTION", shell_output("#{bin}/aimarkers #{testpath}/ai.md --no-color --lang en")
   end
 end

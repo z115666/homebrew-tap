@@ -1,4 +1,4 @@
-name: Probar fórmulas
+name: Test formulae
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   probar:
-    name: Instalar, probar y auditar (${{ matrix.os }})
+    name: Install, test and audit (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     strategy:
@@ -22,13 +22,13 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - name: Registrar este repositorio como tap
+      - name: Register this repository as a tap
         run: brew tap z115666/tap "$GITHUB_WORKSPACE"
-      - name: Auditar estilo
+      - name: Style check
         run: brew style z115666/tap
-      - name: Instalar desde código fuente
+      - name: Install from source
         run: brew install --build-from-source z115666/tap/aimarkers
-      - name: Ejecutar test de la fórmula
+      - name: Run formula test
         run: brew test z115666/tap/aimarkers
-      - name: Auditar fórmula
+      - name: Audit formula
         run: brew audit --online z115666/tap/aimarkers
