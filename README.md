@@ -21,7 +21,7 @@ brew install aimarkers
 
 | Formula | Description |
 | --- | --- |
-| [aimarkers](https://github.com/z115666/aimarkers) | Detects AI markers in code, documentation, websites, images (C2PA, IPTC, EXIF) and Git repositories. Optional: `brew install c2patool` to verify C2PA signatures |
+| [aimarkers](https://github.com/z115666/aimarkers) | Detects AI markers in code, documentation, websites, images (C2PA, IPTC, EXIF) and Git repositories, from the terminal or a local graphical interface (`aimarkers --gui`). Optional: `brew install c2patool` to verify C2PA signatures |
 
 ## Security
 
