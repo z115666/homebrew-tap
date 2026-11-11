@@ -1,19 +1,19 @@
 class Aimarkers < Formula
   include Language::Python::Shebang
 
-  desc "Detect AI markers in code, docs, websites, images and Git repositories"
+  desc "Detect AI markers and assess security of code, websites, images and Git repos"
   homepage "https://github.com/z115666/aimarkers"
   # Pinned to a specific commit: immutable, unlike a tag
-  url "https://github.com/z115666/aimarkers/archive/7b90604e020b275d19eb63e51bfd5e07e0cd4c34.tar.gz"
-  version "1.2.1"
-  sha256 "dd540062454213ba748da4110eabe46924b855e05f0ea9ac9b57f9552b2dc6d3"
+  url "https://github.com/z115666/aimarkers/archive/7130ce4aa005e7134d7c0d8aeb0f1e14b03c9731.tar.gz"
+  version "1.3.0"
+  sha256 "62d41f46042702147fb9376231a1e420faac8ddceb8c7f967b1ee0328f58774b"
   license "MIT"
   head "https://github.com/z115666/aimarkers.git", branch: "main"
 
   depends_on "python@3.15"
 
   def install
-    libexec.install "aimarkers.py", "aimarkers_gui.py", "gui"
+    libexec.install Dir["aimarkers*.py"], "cvss4.py", "gui"
     rewrite_shebang detected_python_shebang, libexec/"aimarkers.py"
     bin.install_symlink libexec/"aimarkers.py" => "aimarkers"
     doc.install Dir["README*.md", "SECURITY*.md", "CHANGELOG*.md"]
@@ -39,6 +39,11 @@ class Aimarkers < Formula
     (testpath/"human.md").write "Notes from yesterday's meeting: check the proxy and close the ticket."
     assert_match "No relevant signs", shell_output("#{bin}/aimarkers #{testpath}/human.md --no-color --lang en")
     assert_match "Sin indicios relevantes", shell_output("#{bin}/aimarkers #{testpath}/human.md --no-color --lang es")
+
+    (testpath/"app.py").write "import requests\nrequests.get('https://example.com', verify=False)\n"
+    salida = shell_output("#{bin}/aimarkers #{testpath}/app.py --security-only --no-color --lang en")
+    assert_match "TLS verification disabled in code", salida
+    assert_match "CVSS:4.0/", salida
 
     (testpath/"ai.md").write "More information at https://example.com/?utm_source=chatgpt.com"
     assert_match "EXPLICIT ATTRIBUTION", shell_output("#{bin}/aimarkers #{testpath}/ai.md --no-color --lang en")
