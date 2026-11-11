@@ -4,9 +4,9 @@ class Aimarkers < Formula
   desc "Detect AI markers and assess security of code, websites, images and Git repos"
   homepage "https://github.com/z115666/aimarkers"
   # Pinned to a specific commit: immutable, unlike a tag
-  url "https://github.com/z115666/aimarkers/archive/5ceef89de8e6c43e5b1838e2892640d4049a9300.tar.gz"
-  version "1.6.0"
-  sha256 "9e775e8e13dccbf365106f7184aefb3db427f98368697b9ec10c0e026a9adbbf"
+  url "https://github.com/z115666/aimarkers/archive/643e90f05f61fdd916ca112b6183766ab5bb3998.tar.gz"
+  version "1.7.0"
+  sha256 "27a3d8ea3b62e66c60d9faf1f99ef0ea14002d597d21af11692c68b5db296692"
   license "MIT"
   head "https://github.com/z115666/aimarkers.git", branch: "main"
 
